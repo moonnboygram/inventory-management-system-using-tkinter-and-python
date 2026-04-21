@@ -96,7 +96,6 @@ root.geometry("1270x668+0+0")
 # root.resizable(0,0)
 root.configure(bg = "white")
 
-
 background_image = PhotoImage(file = "inventory.png")
 title = Label(root, image = background_image, compound = LEFT, text= " Inventory Management System", font = ("times new roman", 40, "bold"), 
               bg = "red", fg = "white")
