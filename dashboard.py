@@ -1,6 +1,7 @@
 from tkinter import *
 import sqlite3
 from tkinter import ttk
+from tkcalendar import DateEntry
 
 #functionality part
 def employee_details():
@@ -81,19 +82,101 @@ def employee_details():
     employee_treeview.column("usertype",width=120)
 
     detail_frame=Frame(emp_details_frame)
-    detail_frame.place(x=0, y=300)
+    detail_frame.place(x=110, y=300)
 
     empid_label=Label(detail_frame, text="Empid", font=("times new roman",12))
-    empid_label.grid(row=0,column=0,padx=20)
+    empid_label.grid(row=0,column=0,padx=20, pady=10,sticky="w")
     empid_entry=Entry(detail_frame, font=("times new roman",12),bg="lightyellow")
-    empid_entry.grid(row=0,column=1,padx=20)
+    empid_entry.grid(row=0,column=1,padx=20,pady=10)
 
+    emp_name_label=Label(detail_frame, text="Name", font=("times new roman",12))
+    emp_name_label.grid(row=0,column=2,padx=20,pady=10, sticky="w")
+    emp_name_entry =Entry(detail_frame, font=("times new roman",12),bg="lightyellow")
+    emp_name_entry.grid(row=0,column=3, padx=20,pady=10)
+
+    emp_email_label=Label(detail_frame, text="Email", font=("times new roman",12))
+    emp_email_label.grid(row=0,column=4,padx=20,pady=10, sticky="w")
+    emp_email_entry =Entry(detail_frame, font=("times new roman",12),bg="lightyellow")
+    emp_email_entry.grid(row=0,column=5, padx=20,pady=10)
+
+    emp_gender= Label(detail_frame, text="Gender", font= ("times new roman", 12))
+    emp_gender.grid(row=1,column=0,padx=20,pady=10,sticky="w")
+    
+    emp_gender_type=ttk.Combobox(detail_frame, values=("Male", "Female"),font=("times new roman",12),width=18,state="readonly")
+    emp_gender_type.set("Select Gender")
+    emp_gender_type.grid(row=1, column=1)
+
+    dob_label=Label(detail_frame, text="Date Of Birth", font=("times new roman",12))
+    dob_label.grid(row=1,column=2,padx=20,pady=10, sticky=W)
+    
+    #INSTALL CALENDER ON TERMINAL - PIP INSTALL TKCALENDAR
+    dob_entry=DateEntry(detail_frame, width=18, font=("times new roman",12),bg="lightyellow",
+                        date_pattern="dd/mm/yyyy")
+    dob_entry.grid(row=1,column=3, padx=20,pady=10)
+
+    contact_label=Label(detail_frame, text="Contact", font=("times new roman",12))
+    contact_label.grid(row=1,column=4,padx=20,pady=10,sticky="w")
+    contact_entry =Entry(detail_frame, font=("times new roman",12),bg="lightyellow")
+    contact_entry.grid(row=1,column=5, padx=20,pady=10)
+
+    employment_type =Label (detail_frame, text="Employment Type", font =("times new roman", 12))
+    employment_type.grid(row=2, column=0, padx=20, pady=10,stick="w")
+    
+    employment_entry=ttk.Combobox (detail_frame, values= ("Full Time", "Per Time","Contract", 'Intern', 'Casual')
+                                   ,font=("times new roman", 12),state="readonly", width=18)
+    employment_entry.set("Select Type")
+    employment_entry.grid(row=2, column=1)
+
+    education_type =Label(detail_frame,text="Education", font=("times new roman", 12))
+    education_type.grid(row=2, column=2, padx=20, pady=10,sticky="w")
+
+    education_type_entry=ttk.Combobox (detail_frame, values= ("PHD","HND","MASTERS","OND","WEAC")
+                                       ,font=("times new roman", 12),width=18,state="readonly")
+    education_type_entry.set("Select Education")
+    education_type_entry.grid(row=2, column=3)
+
+    work_shift = Label(detail_frame, text= "Work Shift", font=("times new roman",12))
+    work_shift.grid(row=2,column=4, padx=20,pady=10,sticky=W)
+    
+    work_shift_entry_combobox=ttk.Combobox(detail_frame, values=("Morning","Afternoon","Night","Full day")
+                                  ,font=("times new roman", 12),state="readonly", width=18)
+    work_shift_entry_combobox.set('Select Work Shift')
+    work_shift_entry_combobox.grid(row=2,column=5)
+
+    emp_address = Label(detail_frame, text="Address",font=("times new roman",12))
+    emp_address.grid(row=3, column=0,padx=20,pady=10,sticky=W)
+    emp_address_entry =Text(detail_frame, font=("times new roman",12),bg="light yellow", height=3,width=20)
+    emp_address_entry.grid(row=3,column=1,rowspan=2)
+    
+    date_of_joining=Label(detail_frame,text="Date Of Joining", font=("times new roman",12))
+    date_of_joining.grid(row=3, column=2,padx=20,pady=10,sticky="w")
+
+    date_of_joining_entry=DateEntry(detail_frame,font=("times new roman",12),date_setting="dd/mm/yyyy",width=18)
+    date_of_joining_entry.grid(row=3,column=3)
+
+    salary_label=Label(detail_frame, text="Salary",font=("times new roman",12))
+    salary_label.grid(row=3,column=4,padx=20,pady=10,sticky=W)
+    salary_label_entry=Entry(detail_frame,font=("times new roman",12),bg="light yellow")
+    salary_label_entry.grid(row=3,column=5)
+
+    user_type = Label(detail_frame, text="User Type", font=("times new roman",12))
+    user_type.grid(row=4, column=2,padx=20,pady=10,sticky="w")
+
+    user_type_entry=ttk.Combobox(detail_frame, values=("Admin","Employee"),font=
+                                 ("times new roman",12),state="readonly",width=18)
+    user_type_entry.set("Select User")
+    user_type_entry.grid(row=4, column=3)
+
+    password_label = Label(detail_frame, text="Password",font=("times new roman",12))
+    password_label.grid(row=4, column=4,padx=20,pady=10,sticky=W)
+    password_label_entry =Entry(detail_frame, font=("times new roman",12),bg="light yellow")
+    password_label_entry.grid(row=4,column=5)
     
 #GUI in python #graphical user interface
 root = Tk()
 root.title("Dashboard")
 root.geometry("1270x668+0+0")
-# root.resizable(0,0)
+root.resizable(0,0)
 root.configure(bg = "white")
 
 background_image = PhotoImage(file = "inventory.png")
