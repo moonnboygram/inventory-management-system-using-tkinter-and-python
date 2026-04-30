@@ -2,8 +2,9 @@ from tkinter import *
 from employees import employee_details
 
 
-
+ 
 #GUI in python #graphical user interface
+
 root = Tk()
 root.title("Dashboard")
 root.geometry("1270x668+0+0")

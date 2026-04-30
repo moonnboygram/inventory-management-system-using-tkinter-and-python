@@ -4,6 +4,8 @@ from tkinter import ttk
 from tkcalendar import DateEntry
 import pymysql
 from tkinter import messagebox as msg
+# import re
+
 
 def connect_database():
    try:
@@ -12,16 +14,64 @@ def connect_database():
 
    except:
           msg.showerror("Error", "Database connectivitity issue try again, open mysql command prompt" )
-          return
+          return None, None
    cursor.execute("CREATE DATABASE IF NOT EXISTS inventory_system")
    cursor.execute("USE inventory_system")
-   cursor.execute("CREATE TABLE IF NOT EXISTS employee_data (empID INT PRIMARY KEY, name VARCHAR(100), email VARCHAR(100), " \
+   cursor.execute("DROP TABLE IF EXISTS employee_data")  
+   cursor.execute("CREATE TABLE IF NOT EXISTS employee_data (empID VARCHAR(20)PRIMARY KEY, name VARCHAR(100), email VARCHAR(100), " \
                                                  "gender VARCHAR(50), dob VARCHAR(50),contact VARCHAR(50), employment_type VARCHAR(50)," \
                                                  "education VARCHAR(100), work_shift VARCHAR(50), address VARCHAR(100)," \
-                                                 "doj VARCHAR (50), salary VARCHAR(50),password VARCHAR(50))")
-   connect_database()
+                                                 "doj VARCHAR (50), salary INT,usertype VARCHAR(50), password VARCHAR(50))")
+   
+   
+   return cursor,connection
 
 
+def add_employee(empID,name,email,gender,dob,contact,employment_type,education,work_shift,address,doj,salary,usertype,password):
+     if (empID=="" or name=="" or email=="" or gender=="Select Gender" or contact=="" or employment_type=="Select Type" or education=="Select Education" 
+         or work_shift=="Select Shift" or address=="\n" or doj=="" or salary=="" or usertype=="Select User" or password==""):
+          msg.showerror("Error", "All fields are required")
+
+          return 
+     #validate employee id. making sure the input is a numerical value(only number)
+    #  try: 
+    #     empID = int(empID)
+    #  except ValueError:
+    #       msg.showinfo("Error", "Employee ID must be a number")
+    #       return
+     
+     #Validate global phone number. making sure its a valid number
+     
+    #  pattern = r'^\+[1-9]\d{7,14}$'
+    #  if not re.match(pattern, contact):
+    #   msg.showerror("Error", "Enter a valid phone number")
+    #   return 
+
+     try: 
+        salary = int(salary)
+     except ValueError:
+          msg.showinfo("Error", "Input a valid salary amount. Must be numbers")
+          return
+
+    
+     
+     cursor,connection=connect_database()
+     if not cursor or not connection:
+           return
+     
+     cursor.execute("""
+INSERT INTO employee_data 
+(empID,name,email,gender,dob,contact,employment_type,education,work_shift,address,doj,salary,usertype,password)
+VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)
+""", (empID, name, email, gender, dob, contact,
+      employment_type, education, work_shift,
+      address, doj, salary, usertype, password
+))
+        
+     connection.commit()
+     msg.showinfo("Success", "Data is inserted successfully")
+        
+          
 
 
 #functionality part
@@ -174,7 +224,7 @@ def employee_details(root):
     date_of_joining=Label(detail_frame,text="Date Of Joining", font=("times new roman",12),bg="white")
     date_of_joining.grid(row=3, column=2,padx=20,pady=10,sticky="w")
 
-    date_of_joining_entry=DateEntry(detail_frame,font=("times new roman",12),date_setting="dd/mm/yyyy",width=18)
+    date_of_joining_entry=DateEntry(detail_frame,font=("times new roman",12),date_pattern="dd/mm/yyyy",width=18)
     date_of_joining_entry.grid(row=3,column=3)
 
     salary_label=Label(detail_frame, text="Salary",font=("times new roman",12),bg="white")
@@ -192,13 +242,17 @@ def employee_details(root):
 
     password_label = Label(detail_frame, text="Password",font=("times new roman",12),bg="white")
     password_label.grid(row=4, column=4,padx=20,pady=10,sticky=W)
-    password_label_entry =Entry(detail_frame, font=("times new roman",12),bg="light yellow")
+    password_label_entry =Entry(detail_frame, font=("times new roman",12),bg="light yellow", show="*")
     password_label_entry.grid(row=4,column=5)
     
     button_frame = Frame(emp_details_frame,bg="white")
     button_frame.place(x=200, y=520) 
 
-    add_button =Button (button_frame,text= "Add", font=("times new roman",12),bg="blue",fg="white",width=10)
+    add_button =Button (button_frame,text= "Add",font=("times new roman",12),bg="blue",fg="white",width=10,
+                        command=lambda: add_employee(empid_entry.get(),emp_name_entry.get(),emp_email_entry.get(),emp_gender_type.get(),
+                                             dob_entry.get(),contact_entry.get(),employment_entry.get(),education_type_entry.get(),
+                                             work_shift_entry_combobox.get(),emp_address_entry.get(1.0,END),date_of_joining_entry.get(),
+                                             salary_label_entry.get(),user_type_entry.get(),password_label_entry.get()))
     add_button.grid(row=0, column=0, padx= 70, pady=20)
 
     update_button =Button (button_frame,text= "Update", font=("times new roman",12),bg="blue",fg="white",width=10)
@@ -209,5 +263,7 @@ def employee_details(root):
 
     clear_button =Button (button_frame,text= "Clear", font=("times new roman",12),bg="blue",fg="white",width=10)
     clear_button.grid(row=0, column=3,padx=70, pady=20)
+
+    
 
 #INSTALL SQL - pip install pymysql
